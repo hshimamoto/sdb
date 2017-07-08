@@ -12,6 +12,7 @@ $dbfile = "database.sdb"
 #   - edit
 
 cmd = ARGV[0]
+exit 1 unless cmd
 
 class SDB
   def initialize
