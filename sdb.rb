@@ -14,16 +14,33 @@ $dbfile = "database.sdb"
 cmd = ARGV[0]
 exit 1 unless cmd
 
+class SDBCONFIG
+  def initialize
+    @cfg = {}
+    begin
+      File.open(".sdbconfig") { |f|
+	@cfg = JSON.load(f)
+      }
+    rescue
+    end
+    @cfg["database"] = $dbfile unless @cfg["database"]
+  end
+  def database
+    @cfg["database"]
+  end
+end
+
 class SDB
   def initialize
-    @db = $dbfile
+    @cfg = SDBCONFIG.new
+    @db = @cfg.database
     @obj
     begin
       File.open(@db) { |f|
 	@obj = JSON.load(f)
       }
     rescue
-      puts "No database: #{db}"
+      puts "No database: #{@db}"
       exit
     end
     parse
